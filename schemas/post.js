@@ -20,6 +20,7 @@ const postSchema = new mongoose.Schema({
   },
 });
 
+// createAt & updateAt 자동으로 생성해주는 옵션
 postSchema.set('timestamps', true);
 
 module.exports = mongoose.model('Post', postSchema);

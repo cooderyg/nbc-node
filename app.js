@@ -4,6 +4,7 @@ const port = 3000;
 
 const postsRouter = require('./routes/posts');
 const commnetsRouter = require('./routes/commnets');
+
 //블로그 연결
 const connect = require('./schemas');
 connect();
