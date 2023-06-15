@@ -13,9 +13,8 @@ router.get('/posts', async (_, res) => {
 });
 
 router.get('/post/:postId', async (req, res) => {
-  // String => objectId로 변환해야 조회가능
-  const oid = new ObjectId(req.params.postId);
-  const result = await Post.findOne({ _id: oid });
+  const { postId } = req.params;
+  const result = await Post.findOne({ _id: postId });
 
   res.status(200).json({
     data: {
@@ -43,17 +42,17 @@ router.post('/post', async (req, res) => {
 // 삭제
 router.delete('/post/:postId', async (req, res) => {
   const { password } = req.body;
-  const oid = new ObjectId(req.params.postId);
-  const post = await Post.findOne({ _id: oid });
+  const { postId } = req.params;
+  const post = await Post.findOne({ _id: postId });
 
   if (post.password === password) {
     //비밀번호가 일치할 때
 
     // 해당 Post삭제
-    const postDeleteResult = await Post.deleteOne({ _id: oid });
+    const postDeleteResult = await Post.deleteOne({ _id: postId });
 
     // 해당 Post와 연결된 댓글들 삭제
-    const commentDeleteResult = await Comment.deleteMany({ postId: oid });
+    const commentDeleteResult = await Comment.deleteMany({ postId: postId });
     res.status(200).json({
       data: {
         postDeleteResult,
@@ -68,16 +67,16 @@ router.delete('/post/:postId', async (req, res) => {
 
 // 수정
 router.put('/post/:postId', async (req, res) => {
-  const oid = new ObjectId(req.params.postId);
+  const { postId } = req.params;
   const { content, password, title } = req.body;
   // content 입력 안했을 때 메세지
   if (!content) res.json({ message: '포스트 내용을 입력해주세요' });
 
-  const post = await Post.findOne({ _id: oid });
+  const post = await Post.findOne({ _id: postId });
   if (post.password === password) {
     // 비밀번호가 같다면
     const result = await Post.updateOne(
-      { _id: oid },
+      { _id: postId },
       { $set: { content, title } },
     );
     res.status(200).json({
